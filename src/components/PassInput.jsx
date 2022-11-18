@@ -13,7 +13,7 @@ export default function PassInput() {
           placeholder="Ingresa tu contraseña"
           onBlur={() => setIsFocusPass(false)}
           onFocus={() => setIsFocusPass(true)}
-          style={{ borderWidth: 1, width: '92%' }}
+          style={{ borderWidth: 1, width: '91%' }}
         />
         <Icon name='eye-off' size={18} color='#009530' />
       </View>
