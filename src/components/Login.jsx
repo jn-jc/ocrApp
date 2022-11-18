@@ -1,64 +1,72 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableHighlight, StyleSheet, Image } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { View, Text, TextInput, TouchableWithoutFeedback, StyleSheet, Image } from "react-native";
 
 import PrimaryButton from "./PrimaryButton";
 import theme from "../theme";
+import PassInput from "./PassInput";
 
 const Login = () => {
 
+  function inputEmpty(password, email) {
+    if (password && email !== ' ') {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
+  const [pass, onChagePass] = useState('')
+
+  const [email, onChangeEmail] = useState('')
   const [isFocus, setIsFocus] = useState(false)
-  const [isFocusPass, setIsFocusPass] = useState(false)
 
   return (
 
     <View>
-      <View style={{ alignItems: 'center', marginTop: 66 }}>
+      <View style={{ alignItems: 'center', marginTop: 50 }}>
         <Image source={require('../../assets/Logocv.png')} fadeDuration={0} style={{ width: 150, height: 150, marginBottom: 15, marginLeft: 15 }} />
         <Text style={styles.title}>Ingresa</Text>
       </View>
       <View style={styles.formContainer}>
         <Text style={styles.label}>Email</Text>
         <TextInput
+          style={isFocus ? styles.inputTextFocus : styles.inputText}
+          onChangeText={onChangeEmail}
+          keyboardType={'email-address'}
           autoComplete="off"
           autoCapitalize="none"
-          placeholder="Ingresa tu correo electronico"
           onBlur={() => setIsFocus(false)}
           onFocus={() => setIsFocus(true)}
-          style={isFocus ? styles.inputTextFocus : styles.inputText}
+          value={email}
         />
         <Text style={styles.label}>Contraseña</Text>
-        <View style={styles.inputIcon}>
-          <TextInput
-            secureTextEntry={true}
-            placeholder="Ingresa tu contraseña"
-            onBlur={() => setIsFocusPass(false)}
-            onFocus={() => setIsFocusPass(true)}
-            style={isFocusPass ? styles.inputTextFocus : styles.inputText}
+        <View>
+          <PassInput
+            pass={pass}
+            onChagePass={onChagePass}
           />
-          <Icon style={styles.icon} name="eye-off" size={15} color='#5EB04E' />
         </View>
-
       </View>
-      <View>
-        <TouchableHighlight
-          onPress={() => { alert('Presionaste el boton de iniciar sesion') }}
-          style={{ alignItems: 'center' }}
+      <View
+        style={{ alignItems: 'center' }}>
+        <TouchableWithoutFeedback
+          onPress={() => { alert(`email: ${email} password: ${pass} `) }}
+          disabled={inputEmpty(pass, email) ? false : true}
         >
-          <PrimaryButton>Iniciar Sesión</PrimaryButton>
-        </TouchableHighlight>
+          <View>
+            <PrimaryButton >Iniciar Sesión</PrimaryButton>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  inputIcon:{
-    flexDirection: 'row'
-  },
   formContainer: {
     alignItems: 'flex-start',
-    marginHorizontal: 17,
+    marginHorizontal: 20,
   },
   title: {
     color: theme.colors.primary,
