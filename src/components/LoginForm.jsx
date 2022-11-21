@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 
 //Local
-
+import PassInput from './PassInput'
 import Input from './Input'
 import PrimaryButton from './PrimaryButton'
 
@@ -21,6 +22,10 @@ const singInValidationSchema = yup.object().shape({
 
 const LoginForm = () => {
 
+  const navigation = useNavigation()
+
+  const [isVisible, setIsVisible] = useState(true)
+
   return (
     <Formik
       validationSchema={singInValidationSchema}
@@ -29,7 +34,13 @@ const LoginForm = () => {
         email: '',
         password: ''
       }}
-      onSubmit={values => { alert(`email: ${values.email} pass: ${values.password}`) }}
+      onSubmit={values => {
+        if (values) {
+          navigation.navigate('Home')
+        } else {
+          alert('El usuario o la contraseña son inconrrectos, por favor intente de nuevo')
+        }
+      }}
     >
       {({ handleSubmit, values, handleChange, errors }) => (
         <View style={{ marginHorizontal: 15 }}>
@@ -44,24 +55,26 @@ const LoginForm = () => {
           />
           <Text style={styles.error}>{errors.email}</Text>
           <Text style={styles.label}>Contraseña</Text>
-          <Input
-            onChangeText={handleChange('password')}
-            value={values.password}
-            secureTextEntry={true}
-          />
+          <View>
+            <PassInput
+              onChangeText={handleChange('password')}
+              value={values.password}
+              secureTextEntry={isVisible}
+              autoCorrect={false}
+              autoComplete='off'
+            />
+          </View>
           <View style={{ alignItems: 'center' }}>
             <TouchableWithoutFeedback
               onPress={handleSubmit}
             >
               <View>
-                <PrimaryButton>Iniciar Sesion</PrimaryButton>
+                <PrimaryButton>Iniciar Sesión</PrimaryButton>
               </View>
             </TouchableWithoutFeedback>
           </View>
         </View>
-
       )}
-
     </Formik>
   )
 }
@@ -69,10 +82,10 @@ const LoginForm = () => {
 export default LoginForm
 
 const styles = StyleSheet.create({
-  error:{
+  error: {
     fontSize: 8,
     marginTop: -20,
-    alignSelf:'center',
+    alignSelf: 'center',
     color: 'red'
   },
   label: {

@@ -18,7 +18,7 @@ const NewCustomerScreen = () => {
       </Text>
       <View style={styles.centerItems}>
         <TouchableWithoutFeedback
-          onPress={() => alert('Has abierto la camara')}
+          onPress={() => alert('Abrir camara') }
         >
           <View style={styles.card}>
             <Icon style={styles.cameraIcon} name="camera" size={30} color='#009738'/>

@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { TextInput, StyleSheet } from 'react-native';
 
 const Input = ({ value, onChangeText, secureTextEntry, autoCapitalize, autoComplete, autoCorrect,keyboardType, ...props }) => {
 
   const [onFocus, setOnFocus] = useState(false)
 
   return (
-    <View>
+
       <TextInput
         onChangeText={onChangeText}
         onBlur={() => setOnFocus(false)}
@@ -19,7 +19,7 @@ const Input = ({ value, onChangeText, secureTextEntry, autoCapitalize, autoCompl
         autoCorrect={autoCorrect}
         keyboardType={keyboardType}
       />
-    </View>
+
   );
 }
 

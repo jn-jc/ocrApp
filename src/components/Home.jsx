@@ -1,11 +1,16 @@
-import React from "react";
-import { View, Text, TouchableHighlight, StyleSheet} from 'react-native';
-import theme from "../theme";
+import React, {useEffect} from "react";
+import { View, StyleSheet, BackHandler} from 'react-native';
 
 import Card from "./Card";
 import Underline from "./Underline";
 
 const Home = () => {
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => true)
+    return() => {
+    BackHandler.addEventListener('hardwareBackPress', () => true)
+    }
+  })
   return(
     <View>
       <View style={styles.indexContainer}>

@@ -1,24 +1,24 @@
 import React, { useState } from 'react'
-import { Pressable, StyleSheet, TextInput, View, Text } from 'react-native'
+import { Pressable, StyleSheet, TextInput, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-export default function PassInput({pass, onChagePass}) {
+export default function PassInput({ value, onChangeText, secureTextEntry, autoCapitalize, autoComplete, autoCorrect, keyboardType, ...props }) {
 
   const [isFocusPass, setIsFocusPass] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
 
   return (
-    <View style={isFocusPass ? styles.inputIconContainerFocus : styles.inputIconContainer}>
+    <View style={isFocusPass ? { ...styles.inputIconContainer, borderColor: '#5EB04E', borderWidth: 2 } : { ...styles.inputIconContainer }}>
       <TextInput
         style={styles.input}
-        autoCorrect={false}
+        autoCorrect={autoCorrect}
         keyboardType={isVisible ? 'default' : 'visible-password'}
-        autoComplete='password'
+        autoComplete={autoComplete}
         secureTextEntry={isVisible}
         onBlur={() => setIsFocusPass(false)}
         onFocus={() => setIsFocusPass(true)}
-        onChangeText={onChagePass}
-        value={pass}
+        onChangeText={onChangeText}
+        value={value}
       />
       <Pressable
         onPress={() => { setIsVisible(!isVisible) }}
@@ -44,27 +44,12 @@ const styles = StyleSheet.create({
   },
   inputIconContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     borderWidth: 1,
-    marginTop: 4,
-    height: 50,
-    width: '99%',
     borderRadius: 8,
     borderColor: '#C9C9C9',
-    marginBottom: 24,
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#404447'
-  },
-  inputIconContainerFocus: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderWidth: 2,
     marginTop: 4,
     height: 50,
-    width: '99%',
-    borderRadius: 8,
-    borderColor: '#009530',
+    width: '100%',
     marginBottom: 24,
-  }
+  },
 })
