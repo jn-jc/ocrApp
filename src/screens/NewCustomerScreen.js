@@ -1,15 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as ImagePicker from "expo-image-picker"
 
 import theme from "../theme";
 import PrimaryButton from "../components/PrimaryButton";
 import ImageView from "../components/ImageView";
+import MessageImage from "../components/MessageImage";
 
 const NewCustomerScreen = () => {
+
+  const [modalVisible, setModalVisible] = useState(false)
+  const [image, setImage] = useState(null)
+
   const navigation = useNavigation()
+
+  const takePicture = async () => {
+
+    const options = {
+      base64: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.6,
+    }
+
+    let result = await ImagePicker.launchCameraAsync(options)
+
+    if (result.assets != null) {
+      let pathImage = result.assets[0].uri
+      let fileName = pathImage.split("/")
+      fileName = fileName[fileName.length - 1].slice(-15)
+      setImage(fileName)
+    } else {
+      console.log(result)
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -18,38 +45,48 @@ const NewCustomerScreen = () => {
       </Text>
       <View style={styles.centerItems}>
         <TouchableWithoutFeedback
-          onPress={() => alert('Abrir camara') }
+          onPress={takePicture}
         >
           <View style={styles.card}>
-            <Icon style={styles.cameraIcon} name="camera" size={30} color='#009738'/>
+            <Icon style={styles.cameraIcon} name="camera" size={30} color='#009738' />
             <View style={styles.topText}>
               <Text style={styles.textMain}>Abrir la camara</Text>
             </View>
-            <Icon style={styles.arrowIcon} name="chevron-right" size={25} color='#868686'/>
+            <Icon style={styles.arrowIcon} name="chevron-right" size={25} color='#868686' />
           </View>
         </TouchableWithoutFeedback>
       </View>
-      <View style={styles.fileContainer}>
-        <ImageView>nombre_archivo.jgp</ImageView>
-      </View>
+      {image &&
+        <View style={styles.fileContainer}>
+          <ImageView
+            image={image}
+            setImage={setImage}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible} />
+        </View>
+      }
       <View style={styles.centerItems}>
         <TouchableOpacity
           style={styles.sendButton}
+          disabled={image != null ? false : true}
           onPress={() => navigation.navigate('Succes')}>
           <PrimaryButton styles={styles.sendButton} children={'Enviar'} />
         </TouchableOpacity>
       </View>
-
+      <MessageImage
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </View>
   )
 }
 
 
 const styles = StyleSheet.create({
-  arrowIcon:{
+  arrowIcon: {
     marginRight: -50
   },
-  cameraIcon:{
+  cameraIcon: {
     backgroundColor: '#EBFAE5',
     marginVertical: 20,
     paddingHorizontal: 12,
@@ -92,7 +129,7 @@ const styles = StyleSheet.create({
   sendButton: {
     marginTop: 31
   },
-  fileContainer:{
+  fileContainer: {
     marginTop: 25,
     marginLeft: 15,
   }

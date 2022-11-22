@@ -1,16 +1,25 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Underline from './Underline'
 import theme from '../theme'
-export default function ImageView({ children }) {
+export default function ImageView({ image, setImage, modalVisible, setModalVisible }) {
+
+  function removeImage () {
+    setImage(null)
+    setModalVisible(true)
+  }
   return (
     <View>
       <Underline>Imagen</Underline>
       <View style={styles.container}>
-        <Text style={styles.fileNameText}>{children}</Text>
-        <Icon name='trash-can-outline' size={20} color='#E25453' />
+        <Text style={styles.fileNameText}>{image}</Text>
+        <TouchableWithoutFeedback
+          onPress={removeImage}
+        >
+          <Icon name='trash-can-outline' size={20} color='#E25453' />
+        </TouchableWithoutFeedback>
       </View>
     </View>
   )
