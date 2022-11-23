@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Underline from './Underline'
 import theme from '../theme'
-export default function ImageView({ image, setImage, modalVisible, setModalVisible }) {
+export default function ImageView({ image, setImage, setModalVisible }) {
 
   function removeImage () {
     setImage(null)
