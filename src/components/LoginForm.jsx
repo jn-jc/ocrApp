@@ -26,6 +26,28 @@ const LoginForm = () => {
 
   const [isVisible, setIsVisible] = useState(true)
 
+  const login = async (data) => {
+    try {
+      const token = await fetch('http://192.166.1.1/prueba', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+          //'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: JSON.stringify({
+          usuario: data.email,
+          password: data.password
+        })
+          //'username=admin%40cruzverde.com.co&password=Octubre2022'
+      })
+      const json = token.json();
+      console.log(json)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <Formik
       validationSchema={singInValidationSchema}
@@ -36,6 +58,7 @@ const LoginForm = () => {
       }}
       onSubmit={values => {
         if (values) {
+          login(values)
           navigation.navigate('Home')
         } else {
           alert('El usuario o la contraseña son inconrrectos, por favor intente de nuevo')
