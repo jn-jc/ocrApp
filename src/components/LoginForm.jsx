@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native'
 import { Formik } from 'formik'
@@ -8,6 +8,9 @@ import * as yup from 'yup'
 import PassInput from './PassInput'
 import Input from './Input'
 import PrimaryButton from './PrimaryButton'
+import { getToken } from '../api/auth'
+import { TokenContext } from '../context/TokenContext'
+
 
 const singInValidationSchema = yup.object().shape({
   email: yup
@@ -22,33 +25,14 @@ const singInValidationSchema = yup.object().shape({
 
 const LoginForm = () => {
 
+  const { setUserToken } = useContext(TokenContext)
+
   const navigation = useNavigation()
 
   const [isVisible, setIsVisible] = useState(true)
 
-  const login = async (data) => {
-    try {
-      const token = await fetch('http://192.166.1.1/prueba', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-          //'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: JSON.stringify({
-          usuario: data.email,
-          password: data.password
-        })
-          //'username=admin%40cruzverde.com.co&password=Octubre2022'
-      })
-      const json = token.json();
-      console.log(json)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   return (
+
     <Formik
       validationSchema={singInValidationSchema}
       validateOnChange={false}
@@ -56,13 +40,21 @@ const LoginForm = () => {
         email: '',
         password: ''
       }}
-      onSubmit={values => {
+      onSubmit={async values => {
         if (values) {
-          login(values)
-          navigation.navigate('Home')
-        } else {
-          alert('El usuario o la contraseña son inconrrectos, por favor intente de nuevo')
+          try {
+            const token = await getToken(values.email, values.password);
+            if ('access_token' in token) {
+              setUserToken(token.access_token)
+              navigation.navigate('Home')
+            } else {
+              alert('Acceso incorrecto')
+            }
+          } catch (error) {
+            console.error(error)
+          }
         }
+
       }}
     >
       {({ handleSubmit, values, handleChange, errors }) => (

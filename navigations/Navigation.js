@@ -18,7 +18,7 @@ export default function Navigation() {
         initialRouteName='Login'
         screenOptions={{
           headerShadowVisible: true,
-          headerTitleStyle:{
+          headerTitleStyle: {
             color: theme.colors.secundary,
             fontSize: 13
           },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
@@ -9,13 +9,46 @@ import theme from "../theme";
 import PrimaryButton from "../components/PrimaryButton";
 import ImageView from "../components/ImageView";
 import MessageImage from "../components/MessageImage";
+import { TokenContext } from "../context/TokenContext";
 
 const NewCustomerScreen = () => {
 
+  const { userToken } = useContext(TokenContext)
   const [modalVisible, setModalVisible] = useState(false)
   const [image, setImage] = useState(null)
+  const [imageBase64, setImageBase64] = useState('')
 
   const navigation = useNavigation()
+
+  const sendImage = () => {
+    const url = 'http://127.0.0.1:8000/image/send'
+
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${userToken}`,
+      },
+      body: imageBase64
+    }
+    console.log(imageBase64)
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `bearer ${userToken}`,
+        Accept: 'application/json'
+      },
+      body: imageBase64 
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        navigation.navigate('Succes')
+      })
+      .catch(error => console.log(error))
+
+  }
+
 
   const takePicture = async () => {
 
@@ -28,10 +61,11 @@ const NewCustomerScreen = () => {
     let result = await ImagePicker.launchCameraAsync(options)
 
     if (result.assets != null) {
-      let pathImage = result.assets[0].uri
-      let fileName = pathImage.split("/")
-      fileName = fileName[fileName.length - 1].slice(-15)
+      console.log(result)
+      let fileName = 'image-1'
       setImage(fileName)
+      setImageBase64(result.assets[0].base64)
+
     } else {
       console.log(result)
     }
@@ -69,7 +103,7 @@ const NewCustomerScreen = () => {
         <TouchableOpacity
           style={styles.sendButton}
           disabled={image != null ? false : true}
-          onPress={() => navigation.navigate('Succes')}>
+          onPress={sendImage}>
           <PrimaryButton styles={styles.sendButton} children={'Enviar'} />
         </TouchableOpacity>
       </View>
