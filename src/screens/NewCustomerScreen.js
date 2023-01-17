@@ -10,42 +10,41 @@ import PrimaryButton from "../components/PrimaryButton";
 import ImageView from "../components/ImageView";
 import MessageImage from "../components/MessageImage";
 import { TokenContext } from "../context/TokenContext";
+import { Loading } from "../components/Loading";
+import { StatusBar } from "expo-status-bar";
+import { sendImageB64 } from "../api/sendImage";
 
 const NewCustomerScreen = () => {
 
-  const { userToken } = useContext(TokenContext)
+  const { userToken, isLoading, setIsLoading } = useContext(TokenContext)
   const [modalVisible, setModalVisible] = useState(false)
   const [image, setImage] = useState(null)
   const [imageBase64, setImageBase64] = useState('')
 
   const navigation = useNavigation()
 
-  const sendImage = () => {
-    const url = 'http://127.0.0.1:8000/image/send'
+  const sendImage = async () => {
 
-    const config = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `bearer ${userToken}`,
-      },
-      body: imageBase64
-    }
-    console.log(imageBase64)
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `bearer ${userToken}`,
-        Accept: 'application/json'
-      },
-      body: imageBase64 
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
+    try {
+      setIsLoading(true)
+      let response = await sendImageB64(imageBase64, userToken)
+      if (response.status_code == 202) {
         navigation.navigate('Succes')
-      })
-      .catch(error => console.log(error))
+        setIsLoading(false)
+      }
+      else if (response.status_code == 406) {
+        alert('La imagen no se envio, por favor vuelva a intentarlo mas tarde o comuniquese con el area tecnica')
+        setIsLoading(false)
+      }
+      else if (response.detail == 'Not authenticated' || 'Validación de credenciales sin exito') {
+        alert('Sesion expirada, vuelva a iniciar sesión')
+        navigation.navigate('Login')
+        setIsLoading(false)
+      }
+    } catch (error) {
+      alert(error)
+      setIsLoading(false)
+    }
 
   }
 
@@ -61,7 +60,6 @@ const NewCustomerScreen = () => {
     let result = await ImagePicker.launchCameraAsync(options)
 
     if (result.assets != null) {
-      console.log(result)
       let fileName = 'image-1'
       setImage(fileName)
       setImageBase64(result.assets[0].base64)
@@ -73,44 +71,57 @@ const NewCustomerScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.paragraph}>
-        Toma la imagen completa del voucher, donde se visualicen los datos y la firma del cliente que desea igresar a alguno de los programas de Cruz Verde
-      </Text>
-      <View style={styles.centerItems}>
-        <TouchableWithoutFeedback
-          onPress={takePicture}
-        >
-          <View style={styles.card}>
-            <Icon style={styles.cameraIcon} name="camera" size={30} color='#009738' />
-            <View style={styles.topText}>
-              <Text style={styles.textMain}>Abrir la camara</Text>
-            </View>
-            <Icon style={styles.arrowIcon} name="chevron-right" size={25} color='#868686' />
+
+    <View style={isLoading ? { backgroundColor: '#FFF', height: '100%', justifyContent: 'center', alignItems: 'center' } : styles.container}>
+      {isLoading ?
+        <View>
+          <Loading />
+          <Text>Cargando imagen...</Text>
+        </View> :
+        <View>
+          <Text style={styles.paragraph}>
+            Toma la imagen completa del voucher, donde se visualicen los datos y la firma del cliente que desea igresar a alguno de los programas de Cruz Verde
+          </Text>
+          <View style={styles.centerItems}>
+            <TouchableWithoutFeedback
+              onPress={takePicture}
+            >
+              <View style={styles.card}>
+                <Icon style={styles.cameraIcon} name="camera" size={30} color='#009738' />
+                <View style={styles.topText}>
+                  <Text style={styles.textMain}>Abrir la camara</Text>
+                </View>
+                <Icon style={styles.arrowIcon} name="chevron-right" size={25} color='#868686' />
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableWithoutFeedback>
-      </View>
-      {image &&
-        <View style={styles.fileContainer}>
-          <ImageView
-            image={image}
-            setImage={setImage}
+          {image &&
+            <View style={styles.fileContainer}>
+              <ImageView
+                image={image}
+                setImage={setImage}
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible} />
+            </View>
+          }
+          <View style={styles.centerItems}>
+            {isLoading ?
+              <View style={{ marginTop: 20 }} >
+                <Loading />
+              </View>
+              : <TouchableOpacity
+                style={styles.sendButton}
+                disabled={image != null ? false : true}
+                onPress={sendImage}>
+                <PrimaryButton styles={styles.sendButton} children={'Enviar'} />
+              </TouchableOpacity>}
+          </View>
+          <MessageImage
             modalVisible={modalVisible}
-            setModalVisible={setModalVisible} />
-        </View>
-      }
-      <View style={styles.centerItems}>
-        <TouchableOpacity
-          style={styles.sendButton}
-          disabled={image != null ? false : true}
-          onPress={sendImage}>
-          <PrimaryButton styles={styles.sendButton} children={'Enviar'} />
-        </TouchableOpacity>
-      </View>
-      <MessageImage
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-      />
+            setModalVisible={setModalVisible}
+          />
+        </View>}
+      <StatusBar style="dark" />
     </View>
   )
 }

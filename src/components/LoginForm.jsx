@@ -25,7 +25,7 @@ const singInValidationSchema = yup.object().shape({
 
 const LoginForm = () => {
 
-  const { setUserToken } = useContext(TokenContext)
+  const { setUserToken, setIsLoading } = useContext(TokenContext)
 
   const navigation = useNavigation()
 
@@ -43,15 +43,19 @@ const LoginForm = () => {
       onSubmit={async values => {
         if (values) {
           try {
+            setIsLoading(true)
             const token = await getToken(values.email, values.password);
             if ('access_token' in token) {
               setUserToken(token.access_token)
+              setIsLoading(false)
               navigation.navigate('Home')
             } else {
+              setIsLoading(false)
               alert('Acceso incorrecto')
             }
           } catch (error) {
-            console.error(error)
+            setIsLoading(false)
+            alert('Se presento un error al conectarse a la base de datos, por favor comunicarse con el area tecnica')
           }
         }
 

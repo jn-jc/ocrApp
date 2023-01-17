@@ -1,11 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
+
 
 import theme from "../theme";
 import LoginForm from "./LoginForm";
 
-const Login = () => {
 
+const Login = () => {
 
   return (
 

@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import PrimaryButton from '../components/PrimaryButton'
 import theme from "../theme";
+import { StatusBar } from "expo-status-bar";
 
 const SuccesScreen = () => {
   useEffect(() => {
@@ -30,6 +31,7 @@ const SuccesScreen = () => {
           <PrimaryButton>Volver a incio</PrimaryButton>
         </TouchableOpacity>
       </View>
+      <StatusBar style="dark" />
     </View>
   )
 }

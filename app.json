@@ -21,6 +21,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "co.cruzverde.ocrapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a1766ada-610d-4d47-b6a4-4f87cdaaefba"
+      }
     }
   }
 }
