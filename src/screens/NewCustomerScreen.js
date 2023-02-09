@@ -28,16 +28,17 @@ const NewCustomerScreen = () => {
     try {
       setIsLoading(true)
       let response = await sendImageB64(imageBase64, userToken)
-      if (response.status_code == 202) {
+      console.log(response)
+      if (response.status_code == 200) {
         navigation.navigate('Succes')
         setIsLoading(false)
       }
-      else if (response.status_code == 406) {
-        alert('La imagen no se envio, por favor vuelva a intentarlo mas tarde o comuniquese con el area tecnica')
+      else if (response.status_code == 500) {
+        alert(response.message)
         setIsLoading(false)
       }
       else if (response.detail == 'Not authenticated' || 'Validación de credenciales sin exito') {
-        alert('Sesion expirada, vuelva a iniciar sesión')
+        alert('Sesión expirada, vuelva a iniciar sesión')
         navigation.navigate('Login')
         setIsLoading(false)
       }
@@ -47,8 +48,6 @@ const NewCustomerScreen = () => {
     }
 
   }
-
-
   const takePicture = async () => {
 
     const options = {
@@ -80,7 +79,7 @@ const NewCustomerScreen = () => {
         </View> :
         <View>
           <Text style={styles.paragraph}>
-            Toma la imagen completa del voucher, donde se visualicen los datos y la firma del cliente que desea igresar a alguno de los programas de Cruz Verde
+          Toma la imagen completa del váucher, donde se visualicen los datos y la firma del cliente que desea ingresar a alguno de los programas de Cruz Verde
           </Text>
           <View style={styles.centerItems}>
             <TouchableWithoutFeedback
@@ -89,7 +88,7 @@ const NewCustomerScreen = () => {
               <View style={styles.card}>
                 <Icon style={styles.cameraIcon} name="camera" size={30} color='#009738' />
                 <View style={styles.topText}>
-                  <Text style={styles.textMain}>Abrir la camara</Text>
+                  <Text style={styles.textMain}>Abrir la cámara</Text>
                 </View>
                 <Icon style={styles.arrowIcon} name="chevron-right" size={25} color='#868686' />
               </View>

@@ -20,7 +20,7 @@ const Home = () => {
         <Card 
           textMain={'Nuevo Cliente Programa Club Cruz Verde'}
           onGo={'NewCustomer'}
-        >Envía la imagen del voucher que firma el cliente</Card>
+        >Envía la imagen del váucher que firma el cliente</Card>
       </View>
     </View>
   )

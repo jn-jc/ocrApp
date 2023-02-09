@@ -23,7 +23,7 @@ const SuccesScreen = () => {
         <Icon name="check-circle" size={100} color='#009736'/>
         <Text style={styles.textTitle}>Envío Existoso</Text>
       </View>
-      <Text style={styles.textMessage}>La imagen fue enviada existosamente</Text>
+      <Text style={styles.textMessage}>La imagen fue enviada exitosamente</Text>
       <View>
         <TouchableOpacity
           onPress={() => navigation.navigate('Home')}
