@@ -34,7 +34,9 @@ const NewCustomerScreen = () => {
         setIsLoading(false)
       }
       else if (response.status_code == 500) {
-        alert(response.message)
+        setIsLoading(false)
+      }
+      else if (response.status_code == 400) {
         setIsLoading(false)
       }
       else if (response.detail == 'Not authenticated' || 'Validación de credenciales sin exito') {
@@ -42,9 +44,13 @@ const NewCustomerScreen = () => {
         navigation.navigate('Login')
         setIsLoading(false)
       }
+      setImage(null)
+      setImageBase64('')
     } catch (error) {
       alert(error)
       setIsLoading(false)
+      setImage(null)
+      setImageBase64('')
     }
 
   }
@@ -79,7 +85,7 @@ const NewCustomerScreen = () => {
         </View> :
         <View>
           <Text style={styles.paragraph}>
-          Toma la imagen completa del váucher, donde se visualicen los datos y la firma del cliente que desea ingresar a alguno de los programas de Cruz Verde
+            Toma la imagen completa del voucher, donde se visualicen los datos y la firma del cliente que desea ingresar a alguno de los programas de Cruz Verde
           </Text>
           <View style={styles.centerItems}>
             <TouchableWithoutFeedback

@@ -23,9 +23,10 @@
     "android": {
       "package": "co.cruzverde.ocrapp",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "allowBackup": false
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +35,16 @@
       "eas": {
         "projectId": "a1766ada-610d-4d47-b6a4-4f87cdaaefba"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
+        }
+      ]
+    ]
   }
 }

@@ -1,3 +1,3 @@
-const API_HOST = 'http://172.18.50.27:8000/'
+const API_HOST = 'https://voucherclub.cruzverde.com.co:8000/'
 
 export { API_HOST }

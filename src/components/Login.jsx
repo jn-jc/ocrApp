@@ -12,7 +12,7 @@ const Login = () => {
 
     <View>
       <View style={{ alignItems: 'center', marginTop: 70 }}>
-        <Image source={require('../../assets/Logocv.png')} fadeDuration={0} style={{ width: 150, height: 150, marginBottom: 15, marginLeft: 15 }} />
+        <Image source={require('../../assets/LogoLogin.png')} fadeDuration={0} style={{ width: 150, height: 150, marginBottom: 15, marginLeft: 15 }} />
         <Text style={styles.title}>Ingresa</Text>
       </View>
       <View >
